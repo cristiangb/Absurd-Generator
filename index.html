@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador de escenarios absurdos coherentes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: #111827;
+      color: #f3f4f6;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 28px;
+    }
+    .card {
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 16px;
+    }
+    button {
+      background: #f59e0b;
+      color: #111827;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .label {
+      color: #fbbf24;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .value {
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      border-radius: 10px;
+      border: 1px solid #4b5563;
+      padding: 12px;
+      background: #0f172a;
+      color: #e5e7eb;
+      resize: vertical;
+      font-family: inherit;
+    }
+    .hint {
+      color: #9ca3af;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Generador de escenarios absurdos coherentes</h1>
+    <p>Genera una idea, su justificación y un prompt visual listo para copiar.</p>
+
+    <button onclick="generateScenario()">Generar escenario</button>
+    <button onclick="copyPrompt()">Copiar prompt</button>
+
+    <div class="card">
+      <span class="label">Título</span>
+      <div id="title" class="value">Todavía no hay escenario.</div>
+
+      <span class="label">Concepto</span>
+      <div id="concept" class="value">Presioná “Generar escenario”.</div>
+
+      <span class="label">Objetivo</span>
+      <div id="goal" class="value">-</div>
+
+      <span class="label">Justificación</span>
+      <div id="justification" class="value">-</div>
+
+      <span class="label">Prompt visual</span>
+      <textarea id="prompt" readonly></textarea>
+      <div class="hint">Primera versión: genera el prompt. Después le enchufamos imagen real.</div>
+    </div>
+  </div>
+
+  <script>
+    const domains = [
+      "depósito logístico",
+      "yacimiento petrolero",
+      "campo de entrenamiento militar",
+      "taller de soldadura",
+      "puerto industrial",
+      "mina a cielo abierto"
+    ];
+
+    const absurdities = [
+      "gravedad lateral constante",
+      "objetos con rebote elástico exagerado",
+      "niebla inteligente que oculta solo lo importante",
+      "vehículos que dejan estelas resbaladizas",
+      "controles con micro retraso variable",
+      "zonas donde el sonido llega tarde"
+    ];
+
+    const goals = [
+      "anticipación espacial",
+      "control fino de maniobras",
+      "toma de decisiones bajo presión",
+      "adaptación a condiciones no convencionales",
+      "coordinación entre percepción y acción",
+      "prevención de errores operativos"
+    ];
+
+    const styles = [
+      "realista cinematográfico",
+      "industrial técnico",
+      "surreal pero plausible",
+      "concept art de simulación avanzada"
+    ];
+
+    function pick(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function buildTitle(domain, absurdity) {
+      return `${capitalize(domain)} con ${absurdity}`;
+    }
+
+    function capitalize(text) {
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+
+    function buildConcept(domain, absurdity) {
+      return `Un escenario de ${domain} donde la condición dominante es ${absurdity}. El entorno conserva lógica operativa, pero obliga al usuario a reaprender cómo leer el espacio y actuar dentro de él.`;
+    }
+
+    function buildJustification(domain, absurdity, goal) {
+      return `La anomalía de ${absurdity} se usa como recurso de entrenamiento en un/a ${domain} para forzar ${goal}, romper automatismos y exigir una lectura más consciente del entorno.`;
+    }
+
+    function buildPrompt(domain, absurdity, goal, style) {
+      return [
+        `training simulation scene in a ${domain}`,
+        `main absurd condition: ${absurdity}`,
+        `purpose: train ${goal}`,
+        `visual style: ${style}`,
+        `highly detailed environment`,
+        `coherent machinery and layout`,
+        `realistic lighting`,
+        `technical atmosphere`,
+        `surreal logic but believable worldbuilding`
+      ].join(", ");
+    }
+
+    function generateScenario() {
+      const domain = pick(domains);
+      const absurdity = pick(absurdities);
+      const goal = pick(goals);
+      const style = pick(styles);
+
+      const title = buildTitle(domain, absurdity);
+      const concept = buildConcept(domain, absurdity);
+      const justification = buildJustification(domain, absurdity, goal);
+      const prompt = buildPrompt(domain, absurdity, goal, style);
+
+      document.getElementById("title").textContent = title;
+      document.getElementById("concept").textContent = concept;
+      document.getElementById("goal").textContent = goal;
+      document.getElementById("justification").textContent = justification;
+      document.getElementById("prompt").value = prompt;
+    }
+
+    async function copyPrompt() {
+      const prompt = document.getElementById("prompt").value;
+      if (!prompt) return;
+      await navigator.clipboard.writeText(prompt);
+      alert("Prompt copiado.");
+    }
+  </script>
+</body>
+</html>
